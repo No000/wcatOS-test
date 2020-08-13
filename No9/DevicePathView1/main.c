@@ -1,21 +1,17 @@
 #include "efi.h"
 #include "common.h"
 
-void efi_main(void *ImageHandle, struct EFI_SYSTEM_TABLE *SystemTable)
+void efi_main(void *ImageHandle __attribute__ ((unused)),
+         struct EFI_SYSTEM_TABLE *SystemTable)
 {
-    unsigned long long status;
-    struct EFI_LOADED_IMAGE_PROTOCOL *lip;
+    struct EFI_DEVICE_PATH_PROTOCOL *dev_path;
 
     efi_init(SystemTable);
     cls();
 
-    status = ST->BootServices->OpenProtocol(
-        ImageHandle, &lip_guid, (void **)&lip, ImageHandle, NULL,
-        EFI_OPEN_PROTOCOL_GET_PROTOCOL);
-    assert(status, L"OpenProtocol");
-
-    puts(L"lip->FilePath: ");
-    puts(DPTTP->ConvertDevicePathToText(lip->FilePath, FALSE, FALSE));
+    dev_path = DPFTP->ConvertTextToDevicePath(L"\\test.efi");
+    puts(L"dev_path: ");
+    puts(DPTTP->ConvertDevicePathToText(dev_path, FALSE, FALSE));
     puts(L"\r\n");
     
     while (TRUE);

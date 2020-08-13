@@ -346,14 +346,21 @@ struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL {
         unsigned char AllowShortcuts);
 };
 
+struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL {
+    unsigned long long _buf;
+    struct EFI_DEVICE_PATH_PROTOCOL *(*ConvertTextToDevicePath) (
+        const unsigned short *TextDevicePath);
+};
+
 extern struct EFI_SYSTEM_TABLE *ST;
 extern struct EFI_GRAPHICS_OUTPUT_PROTOCOL *GOP;
 extern struct EFI_SIMPLE_POINTER_PROTOCOL *SPP;
 extern struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SFSP;
 extern struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *STIEP;
 extern struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL *DPTTP;
+extern struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL *DPFTP;
 extern struct EFI_GUID lip_guid;
 
 void efi_init(struct EFI_SYSTEM_TABLE *SystemTable);
-
+ 
 #endif

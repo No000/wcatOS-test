@@ -183,7 +183,7 @@ struct EFI_SYSTEM_TABLE {
             void **Interface,
             void *AgentHandle,
             void *ControllerHandle,
-            unsigned int Attribute);
+            unsigned int Attributes);
         unsigned long long _buf9[2];
 
         //
@@ -293,41 +293,66 @@ struct EFI_KEY_STATE {  // キー入力時の状態を定義する
 };
 
 struct EFI_KEY_DATA {
-    struct EFI_INPUT_KEY    Key;
-    struct EFI_KEY_STATE    KeyState;
+    struct EFI_INPUT_KEY Key;
+    struct EFI_KEY_STATE KeyState;
 };
 
 struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL {
     unsigned long long (*Reset)(
-        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL    *This,
+        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
         unsigned char ExtendedVerification);
     unsigned long long (*ReadKeyStrokeEx)(
-        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL    *This,
+        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
         struct EFI_KEY_DATA *KeyData);
     void *WaitForKeyEx;
     unsigned long long (*SetState)(
-        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL    *This,
+        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
         unsigned char *KeyToggleState);
     unsigned long long (*RegisterKeyNotify)(    // 特定のキー入力で返す関数を登録できる
-        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL    *This,
+        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
         struct EFI_KEY_DATA *KeyData,   // イベントとして使うキーを登録
         unsigned long long (*KeyNotificationFunction)(  // 通知関数
             struct EFI_KEY_DATA *KeyData),
         void **NotifyHandle);   // 登録解除時に返すユニークなハンドル
     unsigned long long (*UnregisterKeyNotify)(
-        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL    *This,
+        struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *This,
         void *NotificationHandle);
 };
 
 struct EFI_LOADED_IMAGE_PROTOCOL {
-    // 2020/06/18ここから〜
-}
+    unsigned int Revision;
+    void *ParentHandle;
+    struct EFI_SYSTEM_TABLE *SystemTable;
+    // Source location of the image
+    void *DeviceHandle;
+    struct EFI_DEVICE_PATH_PROTOCOL *FilePath;
+    void *Reserved;
+    // Image’s load options
+    unsigned int LoadOptionsSize;
+    void *LoadOptions;
+    // Location where image was loaded
+    void *ImageBase;
+    unsigned long long ImageSize;
+    enum EFI_MEMORY_TYPE ImageCodeType;
+    enum EFI_MEMORY_TYPE ImageDataType;
+    unsigned long long (*Unload)(void *ImageHandle);
+};
+
+struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL {
+    unsigned long long _buf;
+    unsigned short *(*ConvertDevicePathToText)(
+        const struct EFI_DEVICE_PATH_PROTOCOL* DeviceNode,
+        unsigned char DisplayOnly,
+        unsigned char AllowShortcuts);
+};
 
 extern struct EFI_SYSTEM_TABLE *ST;
 extern struct EFI_GRAPHICS_OUTPUT_PROTOCOL *GOP;
 extern struct EFI_SIMPLE_POINTER_PROTOCOL *SPP;
 extern struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SFSP;
 extern struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *STIEP;
+extern struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL *DPTTP;
+extern struct EFI_GUID lip_guid;
 
 void efi_init(struct EFI_SYSTEM_TABLE *SystemTable);
 

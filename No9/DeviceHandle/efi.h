@@ -369,6 +369,7 @@ extern struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *STIEP;
 extern struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL *DPTTP;
 extern struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL *DPFTP;
 extern struct EFI_GUID lip_guid;
+extern struct EFI_GUID dpp_guid;
 
 void efi_init(struct EFI_SYSTEM_TABLE *SystemTable);
  

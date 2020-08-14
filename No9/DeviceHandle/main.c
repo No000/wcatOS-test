@@ -4,22 +4,30 @@
 void efi_main(void *ImageHandle __attribute__ ((unused)),
          struct EFI_SYSTEM_TABLE *SystemTable)
 {
+    struct EFI_LOADED_IMAGE_PROTOCOL *lip;
     struct EFI_DEVICE_PATH_PROTOCOL *dev_path;
     unsigned long long status;
-    void *image;
 
     efi_init(SystemTable);
     cls();
 
-    dev_path = DPFTP->ConvertTextToDevicePath(L"\\test.efi");
+    // ImageHandleのEFI_LOADIMAGE_PROTOCOL(lip)を取得
+    // デバイスパスを調べてくれて取得する
+    status = ST->BootServices->OpenProtocol(
+        ImageHandle, &lip_guid, (void **)&lip, ImageHandle, NULL,
+        EFI_OPEN_PROTOCOL_GET_PROTOCOL);
+    assert(status, L"OpenProtocol(lip)");
+
+    // lip->DeviceHandleのEFI_DEVICE_PATH_PROTOCOL(dev_path)を取得
+    status = ST->BootServices->OpenProtocol(
+        lip->DeviceHandle, &dpp_guid, (void **)&dev_path, ImageHandle,
+        NULL, EFI_OPEN_PROTOCOL_GET_PROTOCOL);
+    assert(status, L"OpenProtocol(dpp)");
+
+    // dev_pathをテキストに変換し表示
     puts(L"dev_path: ");
     puts(DPTTP->ConvertDevicePathToText(dev_path, FALSE, FALSE));
     puts(L"\r\n");
 
-    status = ST->BootServices->LoadImage(FALSE, ImageHandle, dev_path, NULL,
-                            0, &image);
-    assert(status, L"LoadImage");
-    puts(L"LoadImage: Success!\r\n");
-    
     while (TRUE);
 }

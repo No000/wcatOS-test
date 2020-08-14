@@ -26,7 +26,7 @@ test.o: HelloUefi/HelloUefimain.c
 	clang -target x86_64-pc-win32-coff -fno-stack-protector -fshort-wchar \
 	-Wno-incompatible-library-redeclaration \
 	-mno-red-zone -nostdlibinc -Wall -Wpedantic -c -o $@ $+
-
+# lldだと-subsystem:efi_applicationの時点でリロケータブルなバイナリだそうです。教えてくれた方ほんとにありがとう
 ../../Build/hdd/test.efi: test.o
 	lld-link  -subsystem:efi_application -nodefaultlib -dll -entry:efi_main $+ -out:$@
 

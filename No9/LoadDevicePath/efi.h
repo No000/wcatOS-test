@@ -160,7 +160,14 @@ struct EFI_SYSTEM_TABLE {
 		/*                              */
 		/* Image Services               */
 		/*                              */
-		unsigned long long _buf6[5];
+        unsigned long long (*LoadImage)(
+            unsigned char BootPolicy,
+            void *ParentImageHandle,
+            struct EFI_DEVICE_PATH_PROTOCOL *DevicePath,
+            void *SourceBuffer,
+            unsigned long long SourceSize,
+            void **ImageHandle);
+        unsigned long long _buf6[4];
 		/*                              */
 		/* Miscellaneous Services       */
 		/*                              */
@@ -170,10 +177,12 @@ struct EFI_SYSTEM_TABLE {
             unsigned long long WatchdogCode,
             unsigned long long DataSize,
             unsigned short *WatchdogData);
+
         //
         // DriverSupport Services
         //
         unsigned long long _buf8[2];
+     
         //
         // Open and Close Protocol Services
         //

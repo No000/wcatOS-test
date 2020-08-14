@@ -24,7 +24,7 @@ void efi_main(void *ImageHandle __attribute__ ((unused)),
         NULL, EFI_OPEN_PROTOCOL_GET_PROTOCOL);
     assert(status, L"OpenProtocol(dpp)");
 
-    // dev_pathをテキストに変換し表示
+    // dev_pathをテキストに変換し表示(これでデバイス（HDDやUSBのROOTを指定できるようになった！）)
     puts(L"dev_path: ");
     puts(DPTTP->ConvertDevicePathToText(dev_path, FALSE, FALSE));
     puts(L"\r\n");

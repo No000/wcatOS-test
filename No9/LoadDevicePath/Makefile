@@ -22,7 +22,6 @@ main.o: main.c
 	lld-link  -subsystem:efi_application -nodefaultlib -dll -entry:efi_main $+ -out:$@
 
 # 以下ロードするUEFIアプリケーションのコンパイルと配置
-# 著者のコラムでの-sahredをclangで実践する際OSdevで-fpicが有効そうだったので
 test.o: HelloUefi/HelloUefimain.c
 	clang -target x86_64-pc-win32-coff -fno-stack-protector -fshort-wchar \
 	-Wno-incompatible-library-redeclaration \

@@ -356,7 +356,8 @@ struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL {
 };
 
 struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL {
-    unsigned long long _buf;
+    struct EFI_DEVICE_PATH_PROTOCOL (*ConvertTextToDeviceNode) (
+        const unsigned short *TextDeviceNode);
     struct EFI_DEVICE_PATH_PROTOCOL *(*ConvertTextToDevicePath) (
         const unsigned short *TextDevicePath);
 };

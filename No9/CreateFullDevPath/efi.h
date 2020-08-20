@@ -356,10 +356,17 @@ struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL {
 };
 
 struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL {
-    struct EFI_DEVICE_PATH_PROTOCOL (*ConvertTextToDeviceNode) (
+    struct EFI_DEVICE_PATH_PROTOCOL *(*ConvertTextToDeviceNode) (
         const unsigned short *TextDeviceNode);
     struct EFI_DEVICE_PATH_PROTOCOL *(*ConvertTextToDevicePath) (
         const unsigned short *TextDevicePath);
+};
+
+struct EFI_DEVICE_PATH_UTILITIES_PROTOCOL {
+    unsigned long long _buf[3];
+    struct EFI_DEVICE_PATH_PROTOCOL *(*AppendDeviceNode)(
+        const struct EFI_DEVICE_PATH_PROTOCOL *DevicePath,
+        const struct EFI_DEVICE_PATH_PROTOCOL *DeviceNode);
 };
 
 extern struct EFI_SYSTEM_TABLE *ST;
@@ -369,6 +376,7 @@ extern struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SFSP;
 extern struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *STIEP;
 extern struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL *DPTTP;
 extern struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL *DPFTP;
+extern struct EFI_DEVICE_PATH_UTILITIES_PROTOCOL *DPUP;
 extern struct EFI_GUID lip_guid;
 extern struct EFI_GUID dpp_guid;
 

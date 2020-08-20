@@ -8,6 +8,7 @@ struct EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *SFSP; /* ファイルシステム */
 struct EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL *STIEP; // 高機能なキー入力
 struct EFI_DEVICE_PATH_TO_TEXT_PROTOCOL *DPTTP;
 struct EFI_DEVICE_PATH_FROM_TEXT_PROTOCOL *DPFTP;
+struct EFI_DEVICE_PATH_UTILITIES_PROTOCOL *DPUP;
 struct EFI_GUID lip_guid = {0x5b1b31a1, 0x9562, 0x11d2,
                 {0x8e, 0x3f, 0x00, 0xa0,
                 0xc9, 0x69, 0x72, 0x3b}};
@@ -45,6 +46,10 @@ void efi_init(struct EFI_SYSTEM_TABLE *SystemTable)
     struct EFI_GUID dpftp_guid = {0x5c99a21, 0xc70f, 0x4ad2,
                                   {0x8a, 0x5f, 0x35, 0xdf,
                                   0x33, 0x43, 0xf5, 0x1e}};
+    // EFI_DEVICE_PATH_UTILITIES_PROTOCOL
+    struct EFI_GUID dpup_guid = {0x379be4e, 0xd706, 0x437d,
+                                {0xb0, 0x37, 0xed, 0xb8,
+                                 0x2f, 0xb7, 0x72, 0xa4}};
 
     ST = SystemTable;
     ST->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
@@ -54,4 +59,5 @@ void efi_init(struct EFI_SYSTEM_TABLE *SystemTable)
     ST->BootServices->LocateProtocol(&stiep_guid, NULL, (void **)&STIEP);
     ST->BootServices->LocateProtocol(&dpttp_guid, NULL, (void **)&DPTTP);
     ST->BootServices->LocateProtocol(&dpftp_guid, NULL, (void **)&DPFTP);
+    ST->BootServices->LocateProtocol(&dpup_guid, NULL, (void **)&DPUP);
 }

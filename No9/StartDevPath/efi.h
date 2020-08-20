@@ -167,7 +167,12 @@ struct EFI_SYSTEM_TABLE {
             void *SourceBuffer,
             unsigned long long SourceSize,
             void **ImageHandle);
-        unsigned long long _buf6[4];
+        unsigned long long (*StartImage)(
+            void *ImageHandle,
+            unsigned long long *ExitDataSize,
+            unsigned short **ExitData);
+        unsigned long long _buf6[3];
+        
 		/*                              */
 		/* Miscellaneous Services       */
 		/*                              */

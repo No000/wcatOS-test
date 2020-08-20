@@ -42,5 +42,10 @@ void efi_main(void *ImageHandle, struct EFI_SYSTEM_TABLE *SystemTable)
     assert(status, L"LoadImage");
     puts(L"LoadImage: Success!\r\n");
 
+    // imageの実行を開始する
+    status = ST->BootServices->StartImage(image, NULL, NULL);
+    assert(status, L"StartImage");
+    puts(L"StartImage: Success!\r\n");
+
     while (TRUE);
 }

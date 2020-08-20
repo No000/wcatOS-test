@@ -8,6 +8,7 @@ void efi_main(void *ImageHandle, struct EFI_SYSTEM_TABLE *SystemTable)
     struct EFI_DEVICE_PATH_PROTOCOL *dev_node;
     struct EFI_DEVICE_PATH_PROTOCOL *dev_path_merged;
     unsigned long long status;
+    void *image;
 
     efi_init(SystemTable);
     cls();
@@ -34,6 +35,12 @@ void efi_main(void *ImageHandle, struct EFI_SYSTEM_TABLE *SystemTable)
     puts(L"dev_path_merged: ");
     puts(DPTTP->ConvertDevicePathToText(dev_path_merged, FALSE, FALSE));
     puts(L"\r\n");
+
+    // dev_path_mergedをロード
+    status = ST->BootServices->LoadImage(FALSE, ImageHandle,
+                        dev_path_merged, NULL, 0, &image);
+    assert(status, L"LoadImage");
+    puts(L"LoadImage: Success!\r\n");
 
     while (TRUE);
 }

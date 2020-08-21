@@ -48,6 +48,12 @@
 #define EFI_OPEN_PROTOCOL_BY_DRIVER             0x00000010
 #define EFI_OPEN_PROTOCOL_EXCLUSIVE             0x00000020
 
+#define EVT_TIMER                               0x80000000
+#define EVT_RUNTIME                             0x40000000
+#define EVT_NOTIFY_WAIT                         0x00000100
+#define EVT_NOTIFY_SIGNAL                       0x00000200
+#define EVT_SIGNAL_EXIT_BOOT_SERVICES           0x00000201
+#define EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE       0x60000202
 /* キー入力の定義 */
 struct EFI_INPUT_KEY {
     unsigned short ScanCode;    // Unicode外のキー入力に使用。スキャンコード
@@ -78,7 +84,12 @@ enum EFI_MEMORY_TYPE {
     EfiPalCode,
     EfiMaxMemoryType
 };
-
+// タイマイベント関連
+enum EFI_TIMER_DELAY {
+    TimerCancel,
+    TimerPeriodic,
+    TimerRelative
+};
 struct EFI_DEVICE_PATH_PROTOCOL {
     unsigned char Type;
     unsigned char SubType;
@@ -147,7 +158,15 @@ struct EFI_SYSTEM_TABLE {
         /*                          */
         /* Event & Timer Services   */
         /*                          */
-        unsigned long long _buf4[2];
+        unsigned long long (*CreateEvent)(  // タイマイベント関連
+            unsigned int Type,
+            unsigned long long NotifyTpl,
+            void (*NotifyFunction)(void *Event, void *Context),
+            void *NotifyContext,
+            void *Event);
+        unsigned long long (*SetTimer)(void *Event,     // タイマイベント関連
+                            enum EFI_TIMER_DELAY Type,
+                            unsigned long long TriggerTime);
         unsigned long long (*WaitForEvent)(
             unsigned long long NumberOfEvents,
             void **Event,

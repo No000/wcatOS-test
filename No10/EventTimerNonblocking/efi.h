@@ -54,6 +54,11 @@
 #define EVT_NOTIFY_SIGNAL                       0x00000200
 #define EVT_SIGNAL_EXIT_BOOT_SERVICES           0x00000201
 #define EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE       0x60000202
+// イベント割り込み
+#define TPL_APPLICATION                         4
+#define TPL_CALLBACK                            8
+#define TPL_NOTIFY                              16
+#define TPL_HIGH_LEVEL                          31
 /* キー入力の定義 */
 struct EFI_INPUT_KEY {
     unsigned short ScanCode;    // Unicode外のキー入力に使用。スキャンコード
@@ -158,7 +163,7 @@ struct EFI_SYSTEM_TABLE {
         /*                          */
         /* Event & Timer Services   */
         /*                          */
-        unsigned long long (*CreateEvent)(  // タイマイベント関連
+        unsigned long long (*CreateEvent)(  // イベント割り込み関連
             unsigned int Type,
             unsigned long long NotifyTpl,
             void (*NotifyFunction)(void *Event, void *Context),

@@ -95,6 +95,14 @@ enum EFI_TIMER_DELAY {
     TimerPeriodic,
     TimerRelative
 };
+// シャットダウン関連
+enum EFI_RESET_TYPE {
+    EfiResetCold,
+    EfiResetWarm,
+    EfiResetShutdown,
+    EfiResetPlatformSpecific
+};
+
 struct EFI_DEVICE_PATH_PROTOCOL {
     unsigned char Type;
     unsigned char SubType;
@@ -147,7 +155,33 @@ struct EFI_SYSTEM_TABLE {
             unsigned char CursorVisible;    // 現在のカーソル表示設定(表示=1/非表示=0)
         } *Mode;
     } *ConOut;
-    unsigned long long _buf3[3];
+    unsigned long long _buf3[2];
+    struct EFI_RUNTIME_SERVICES {   // シャットダウン関連（OS起動後も使用できるサービス）
+        char _buf_rs1[24];
+        //
+        // Time Services
+        //
+        unsigned long long _buf_rs2[4];
+
+        //
+        // Virtual Memory Services
+        //
+        unsigned long long _buf_rs3[2];
+
+        //
+        // Variable Services
+        //
+        unsigned long long _buf_rs4[3];
+
+        //
+        // Miscellaneous Services
+        //
+        unsigned long long _buf_rs5;
+        void (*ResetSystem)(enum EFI_RESET_TYPE ResetType,
+                    unsigned long long ResetStatus,
+                    unsigned long long DataSize,
+                    void *ResetData);
+    } *RuntimeServices;
     /* ブートサービスプロトコル（ブートローダ関連） */
     struct EFI_BOOT_SERVICES {
         char _buf1[24];

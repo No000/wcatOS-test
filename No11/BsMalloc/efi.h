@@ -72,7 +72,7 @@ struct EFI_GUID {
     unsigned char Data4[8];
 };
 // 詳細は仕様書のP282を参照
-enum EFI_MEMORY_TYPE {
+enum EFI_MEMORY_TYPE {  // メモリ確保関連
     EfiReservedMemoryType,
     EfiLoaderCode,
     EfiLoaderData,
@@ -158,7 +158,13 @@ struct EFI_SYSTEM_TABLE {
         /*                          */
         /* Memory Services          */
         /*                          */
-        unsigned long long _buf3[5];
+        unsigned long long _buf3[3];
+        unsigned long long (*AllocatePool)( // メモリ確保関連
+            enum EFI_MEMORY_TYPE PoolType,
+            unsigned long long Size,
+            void **Buffer);
+        unsigned long long (*FreePool)(
+            void *Buffer);
 
         /*                          */
         /* Event & Timer Services   */

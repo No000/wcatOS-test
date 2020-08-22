@@ -17,7 +17,12 @@ main.o: main.c
 	-Wno-incompatible-library-redeclaration \
 	-mno-red-zone -nostdlibinc -Wall -Wpedantic -c -o $@ $+
 
-../../Build/hdd/EFI/BOOT/BOOTX64.EFI: efi.o common.o main.o
+graphics.o: graphics.c
+	clang -target x86_64-pc-win32-coff -fno-stack-protector -fshort-wchar \
+	-Wno-incompatible-library-redeclaration \
+	-mno-red-zone -nostdlibinc -Wall -Wpedantic -c -o $@ $+
+
+../../Build/hdd/EFI/BOOT/BOOTX64.EFI: efi.o common.o main.o graphics.o
 	mkdir -p ../../Build/hdd/EFI/BOOT
 	lld-link  -subsystem:efi_application -nodefaultlib -dll -entry:efi_main $+ -out:$@
 
